@@ -1,9 +1,14 @@
-package com.example.myapplication.models;
+package com.example.myapplication.models.students;
 
 import java.io.Serializable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "students")
 public class Student implements Serializable {
 
+    @PrimaryKey(autoGenerate = true)
+    public int id;
     public String studentId;
     public String firstName;
     public String lastName;

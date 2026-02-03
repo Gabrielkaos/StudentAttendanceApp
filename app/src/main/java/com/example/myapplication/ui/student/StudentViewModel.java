@@ -1,23 +1,32 @@
 package com.example.myapplication.ui.student;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.myapplication.models.Student;
+import com.example.myapplication.data.AppDatabase;
+import com.example.myapplication.models.students.Student;
+import com.example.myapplication.models.students.StudentDao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-public class StudentViewModel extends ViewModel {
+public class StudentViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<List<Student>> students = new MutableLiveData<>();
+    private final StudentDao studentDao;
+    private final LiveData<List<Student>> students;
 
-    public StudentViewModel(){
-        List<Student> demo = new ArrayList<>();
-        demo.add(new Student("2024-001", "Juan", "", "Dela Cruz", "BSCS", 3));
-        demo.add(new Student("2024-002", "Maria", "S.", "Reyes", "BSIT", 2));
-        students.setValue(demo);
+    public StudentViewModel(@NonNull Application application){
+        super(application);
+        AppDatabase db = AppDatabase.getInstance(application);
+        studentDao = db.studentDao();
+        students = studentDao.getAllStudents();
     }
 
     public LiveData<List<Student>> getStudents(){
@@ -25,28 +34,21 @@ public class StudentViewModel extends ViewModel {
     }
 
     public void addStudent(Student student){
-        List<Student> list = students.getValue();
-        if(list==null)list = new ArrayList<>();
-        list.add(student);
-        students.setValue(list);
+        Executors.newSingleThreadExecutor().execute(()->{
+            studentDao.insert(student);
+        });
     }
 
     public void deleteStudent(Student student){
-        List<Student> list = students.getValue();
-        if(list==null)list = new ArrayList<>();
-        list.remove(student);
-        students.setValue(list);
+        Executors.newSingleThreadExecutor().execute(()->{
+            studentDao.delete(student);
+        });
     }
 
-    public void updateStudent(Student oldStudent, Student newStudent){
-        List<Student> list = students.getValue();
-        if (list == null) return;
-
-        int index = list.indexOf(oldStudent);
-        if (index != -1) {
-            list.set(index, newStudent);
-            students.setValue(list);
-        }
+    public void updateStudent(Student student){
+        Executors.newSingleThreadExecutor().execute(()->{
+            studentDao.update(student);
+        });
     }
 
 

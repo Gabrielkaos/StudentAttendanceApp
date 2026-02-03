@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.R;
-import com.example.myapplication.models.Student;
+import com.example.myapplication.models.students.Student;
 
 public class StudentDialogFragment extends DialogFragment {
 
@@ -26,6 +26,56 @@ public class StudentDialogFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    private boolean validate(
+            EditText etId,
+            EditText etFirst,
+            EditText etLast,
+            EditText etCourse,
+            EditText etYear
+    ) {
+        boolean valid = true;
+
+        if (etId.getText().toString().trim().isEmpty()) {
+            etId.setError("Student ID required");
+            valid = false;
+        }
+
+        if (etFirst.getText().toString().trim().isEmpty()) {
+            etFirst.setError("First name required");
+            valid = false;
+        }
+
+        if (etLast.getText().toString().trim().isEmpty()) {
+            etLast.setError("Last name required");
+            valid = false;
+        }
+
+        if (etCourse.getText().toString().trim().isEmpty()) {
+            etCourse.setError("Course required");
+            valid = false;
+        }
+
+        String yearStr = etYear.getText().toString().trim();
+        if (yearStr.isEmpty()) {
+            etYear.setError("Year required");
+            valid = false;
+        } else {
+            try {
+                int year = Integer.parseInt(yearStr);
+                if (year < 1 || year > 6) {
+                    etYear.setError("Year must be between 1 and 6");
+                    valid = false;
+                }
+            } catch (NumberFormatException e) {
+                etYear.setError("Invalid number");
+                valid = false;
+            }
+        }
+
+        return valid;
+    }
+
 
     @NonNull
     @Override
@@ -54,31 +104,43 @@ public class StudentDialogFragment extends DialogFragment {
 
         Student finalExisting = existing;
 
-        return new AlertDialog.Builder(requireContext())
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle(existing == null ? "Add Student" : "Edit Student")
                 .setView(view)
-                .setPositiveButton("Save", (dialog, which) -> {
-
-                    StudentViewModel vm =
-                            new ViewModelProvider(requireParentFragment())
-                                    .get(StudentViewModel.class);
-
-                    Student updated = new Student(
-                            etId.getText().toString(),
-                            etFirst.getText().toString(),
-                            "",
-                            etLast.getText().toString(),
-                            etCourse.getText().toString(),
-                            Integer.parseInt(etYear.getText().toString())
-                    );
-
-                    if (finalExisting == null) {
-                        vm.addStudent(updated);
-                    } else {
-                        vm.updateStudent(finalExisting, updated);
-                    }
-                })
+                .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", null)
                 .create();
+
+        dialog.setOnShowListener(d -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setOnClickListener(v -> {
+                        if (!validate(etId, etFirst, etLast, etCourse, etYear)) {
+                            return;
+                        }
+
+                        StudentViewModel vm =
+                                new ViewModelProvider(requireParentFragment())
+                                        .get(StudentViewModel.class);
+
+                        Student updated = new Student(
+                                etId.getText().toString().trim(),
+                                etFirst.getText().toString().trim(),
+                                "",
+                                etLast.getText().toString().trim(),
+                                etCourse.getText().toString().trim(),
+                                Integer.parseInt(etYear.getText().toString().trim())
+                        );
+
+                        if (finalExisting != null) {
+                            updated.id = finalExisting.id;
+                            vm.updateStudent(updated);
+                        } else {
+                            vm.addStudent(updated);
+                        }
+                        dialog.dismiss();
+                    });
+        });
+
+        return dialog;
     }
 }
