@@ -16,6 +16,11 @@ public class Student implements Serializable {
     public String course;
     public int year;
 
+    public int getId() {
+        return id;
+    }
+
+
     public Student(String studentId, String firstName, String middleName,
                    String lastName, String course, int year) {
         this.studentId = studentId;

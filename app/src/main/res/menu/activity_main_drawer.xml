@@ -13,9 +13,9 @@
             android:id="@+id/nav_students"
             android:icon="@drawable/menu_students"
             android:title="@string/menu_students" />
-<!--        <item-->
-<!--            android:id="@+id/nav_slideshow"-->
-<!--            android:icon="@drawable/ic_menu_slideshow"-->
-<!--            android:title="@string/menu_slideshow" />-->
+        <item
+            android:id="@+id/nav_subjects"
+            android:icon="@drawable/ic_subjects"
+            android:title="@string/menu_subjects" />
     </group>
 </menu>

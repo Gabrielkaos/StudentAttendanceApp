@@ -25,7 +25,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         this.clickListener = listener;
     }
 
-
     public void setOnStudentLongClickListener(OnStudentLongClickListener onStudentLongClickListener) {
         this.onStudentLongClickListener = onStudentLongClickListener;
     }
@@ -43,6 +42,18 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         return new ViewHolder(view);
 
     }
+    public StudentAdapter() {}
+
+    public StudentAdapter(
+            List<Student> students,
+            OnStudentClickListener clickListener,
+            OnStudentLongClickListener longClickListener
+    ) {
+        this.students = students;
+        this.clickListener = clickListener;
+        this.onStudentLongClickListener = longClickListener;
+    }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){

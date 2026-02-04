@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.myapplication.FabControl;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentStudentsBinding;
+import com.example.myapplication.ui.subject.SubjectDialogFragment;
 
 public class StudentFragment extends Fragment {
 
@@ -58,6 +59,8 @@ public class StudentFragment extends Fragment {
                     .newInstance(student)
                     .show(getChildFragmentManager(), "EditStudent");
         });
+
+
 
 
         studentViewModel.getStudents().observe(getViewLifecycleOwner(),
