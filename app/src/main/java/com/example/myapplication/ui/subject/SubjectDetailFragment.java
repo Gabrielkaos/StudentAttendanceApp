@@ -103,8 +103,7 @@ public class SubjectDetailFragment extends Fragment {
                             .show();
                 },
                 student -> {
-                    // long-press → remove from subject
-                    viewModel.removeStudentFromSubject(subject.getId(),student.getId());
+                    //TODO
                 }
         );
 

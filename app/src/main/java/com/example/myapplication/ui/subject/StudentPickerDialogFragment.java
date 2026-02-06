@@ -89,8 +89,6 @@ public class StudentPickerDialogFragment extends DialogFragment {
                     }
                 }
 
-                // Add checked students
-
 
                 // Override Add button to handle selections
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
