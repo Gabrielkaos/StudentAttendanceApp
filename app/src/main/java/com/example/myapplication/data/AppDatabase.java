@@ -13,6 +13,8 @@ import com.example.myapplication.models.subjects.Subject;
 import com.example.myapplication.models.subjects.SubjectDao;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Database(entities = {
         Student.class,
@@ -22,7 +24,8 @@ import java.util.concurrent.Executor;
         version = 3)
 public abstract class AppDatabase extends RoomDatabase {
 
-    public static Executor databaseWriteExecutor;
+    public static final ExecutorService databaseWriteExecutor =
+            Executors.newFixedThreadPool(4);
     private static AppDatabase INSTANCE;
 
     public abstract StudentDao studentDao();

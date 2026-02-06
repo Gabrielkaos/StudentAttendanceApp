@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
@@ -42,4 +43,7 @@ public interface SubjectDao {
 
     @Query("DELETE FROM SubjectStudentCrossRef WHERE subjectId = :subjectId AND studentId = :studentId")
     void removeStudentFromSubject(int subjectId, int studentId);
+
+    @Query("SELECT EXISTS( SELECT 1 FROM SubjectStudentCrossRef WHERE subjectId = :subjectId AND studentId = :studentId)")
+    boolean crossRefExists(int subjectId, int studentId);
 }

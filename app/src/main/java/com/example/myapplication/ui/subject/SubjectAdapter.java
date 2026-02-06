@@ -72,7 +72,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         }
 
         void bind(Subject s) {
-            name.setText(s.name);
+            name.setText(s.name + " id = " + s.id);
             desc.setText(s.description);
         }
     }

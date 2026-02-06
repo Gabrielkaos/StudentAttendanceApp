@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.myapplication.FabControl;
@@ -46,7 +47,11 @@ public class SubjectFragment extends Fragment {
         adapter.setOnItemClickListener(new SubjectAdapter.OnItemClickListener() {
             @Override
             public void onClick(Subject subject) {
+                Bundle args = new Bundle();
+                args.putSerializable("subject", subject);
 
+                NavHostFragment.findNavController(SubjectFragment.this)
+                        .navigate(R.id.action_subjectFragment_to_subjectDetailFragment, args);
             }
 
             @Override

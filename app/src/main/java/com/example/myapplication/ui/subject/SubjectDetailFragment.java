@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.subject;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.FabControl;
 import com.example.myapplication.R;
 import com.example.myapplication.models.students.Student;
 import com.example.myapplication.models.subjects.Subject;
 import com.example.myapplication.ui.student.StudentAdapter;
+import com.example.myapplication.ui.student.StudentDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -31,6 +34,7 @@ public class SubjectDetailFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView tvEmpty;
     private FloatingActionButton fab;
+    private FabControl fabControl;
 
     public static SubjectDetailFragment newInstance(Subject subject) {
         SubjectDetailFragment fragment = new SubjectDetailFragment();
@@ -49,6 +53,10 @@ public class SubjectDetailFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_subject_detail, container, false);
 
+        //hide the global fab
+        fabControl = (FabControl) requireActivity();
+        fabControl.hideFab();
+
         recyclerView = view.findViewById(R.id.recyclerStudents);
         tvEmpty = view.findViewById(R.id.tvEmpty);
         fab = view.findViewById(R.id.fabAddStudent);
@@ -66,7 +74,7 @@ public class SubjectDetailFragment extends Fragment {
         }
 
         observeStudents();
-//        setupFab();
+        setupFab();
 
         return view;
     }
@@ -84,7 +92,15 @@ public class SubjectDetailFragment extends Fragment {
         StudentAdapter adapter = new StudentAdapter(
                 students,
                 student -> {
-                    // tap → view student or edit later
+                    new AlertDialog.Builder(requireActivity())
+                            .setTitle("Remove Student from Subject")
+                            .setMessage("Are you sure you want to remove from subject "
+                                    + student.lastName + ", " + student.firstName + "?")
+                            .setPositiveButton("Delete", (dialog, which) -> {
+                                viewModel.removeStudentFromSubject(subject.getId(),student.getId());
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
                 },
                 student -> {
                     // long-press → remove from subject
@@ -100,12 +116,15 @@ public class SubjectDetailFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), this::updateUI);
     }
 
-//    private void setupFab() {
-//        fab.setOnClickListener(v -> {
-//            // Navigate to picker dialog / screen
-//            StudentPickerDialogFragment
-//                    .newInstance(subject.id)
-//                    .show(getParentFragmentManager(), "pick_students");
-//        });
-//    }
+    private void setupFab() {
+        fab.setImageResource(R.drawable.id_add);
+        fab.setOnClickListener(v -> {
+            // Navigate to picker dialog / screen
+            StudentPickerDialogFragment
+                    .newInstance(subject.id)
+                    .show(getParentFragmentManager(), "pick_students");
+        });
+
+
+    }
 }

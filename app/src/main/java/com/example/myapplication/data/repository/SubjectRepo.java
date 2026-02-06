@@ -1,10 +1,12 @@
 package com.example.myapplication.data.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.myapplication.data.AppDatabase;
+import com.example.myapplication.models.relations.SubjectStudentCrossRef;
 import com.example.myapplication.models.relations.SubjectWithStudents;
 import com.example.myapplication.models.students.Student;
 import com.example.myapplication.models.subjects.Subject;
@@ -37,10 +39,23 @@ public class SubjectRepo {
         return subjectDao.getSubjectWithStudents(subjectId);
     }
 
+
+
     public void removeStudentFromSubject(int subjectId, int studentId) {
         AppDatabase.databaseWriteExecutor.execute(() ->
                 subjectDao.removeStudentFromSubject(subjectId, studentId)
         );
+    }
+
+    public void insertCrossRef(int subjectId, int studentId){
+        Log.d("CROSS_REF",
+                "Inserting subjectId=" + subjectId + ", studentId=" + studentId);
+        executor.execute(() -> {
+                subjectDao.insertCrossRef(
+                        new SubjectStudentCrossRef(subjectId, studentId)
+                );
+        });
+
     }
 
 

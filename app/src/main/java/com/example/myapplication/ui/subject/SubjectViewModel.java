@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
 import com.example.myapplication.data.repository.SubjectRepo;
+import com.example.myapplication.models.relations.SubjectStudentCrossRef;
 import com.example.myapplication.models.students.Student;
 import com.example.myapplication.models.subjects.Subject;
 
@@ -31,6 +32,10 @@ public class SubjectViewModel extends AndroidViewModel {
     public LiveData<List<Student>> getStudentsForSubject(int subjectId) {
         return Transformations.map(repository.getSubjectWithStudents(subjectId),
                 subjectWithStudents -> subjectWithStudents.students);
+    }
+
+    public void addStudentToSubject(int subjectId, int studentId) {
+        repository.insertCrossRef(subjectId, studentId);
     }
 
     public void removeStudentFromSubject(int subjectId, int studentId) {

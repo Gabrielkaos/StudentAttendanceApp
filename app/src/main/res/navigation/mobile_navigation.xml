@@ -22,7 +22,16 @@
         android:id="@+id/nav_subjects"
         android:name="com.example.myapplication.ui.subject.SubjectFragment"
         android:label="@string/menu_subjects"
-        tools:layout="@layout/fragment_students"
-        />
+        tools:layout="@layout/fragment_students">
+        <action
+            android:id="@+id/action_subjectFragment_to_subjectDetailFragment"
+            app:destination="@id/subjectDetailFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/subjectDetailFragment"
+        android:name="com.example.myapplication.ui.subject.SubjectDetailFragment"
+        android:label="Subject Detail"/>
+
 
 </navigation>
